@@ -35,9 +35,146 @@
     <div class="container">
         <h2>Attack Test Script</h2>
         <pre>
+import hashlib
+from cryptography.fernet import Fernet
+import logging
 import threading
 import time
-# More code here...
+
+# Logging setup to montitor events. 1. File name, 2. Log level at or above the info, 3. Log format with timestamp and message
+logging.basicConfig(filename="security.log", level=logging.INFO, format="%(asctime)s - %(message)s")
+
+# Security features
+SECURITY_ENABLED = True # Variable for indication of encryption status
+ENCRYPTION_KEY = Fernet.generate_key() # Generates a unique symmetric encryption key using Fernet
+cipher_suite = Fernet(ENCRYPTION_KEY) # initialized for encrypting and decrypting data
+
+# User data repository
+users = {}  # Stores users as {username: hashed_password}
+
+def hash_password(password: str) -> str: # Function for hashing password using SHA-256
+    return hashlib.sha256(password.encode()).hexdigest()
+
+def authenticate(username: str, password: str) -> bool: # Function for authentication
+    hashed_password = users.get(username)
+    if hashed_password and hashed_password == hash_password(password):
+        logging.info(f"Authentication successful for user: {username}") # Log for successful authentication
+        return True
+    else:
+        logging.warning(f"Authentication failed for user: {username}") # Log for failed authentication
+        return False
+
+def create_account(username: str, password: str): # Create a secure account
+    if username in users:
+        logging.warning(f"Attempt to create duplicate account: {username}") # Log for duplicate account creation
+        print("User already exists")
+        return
+    users[username] = hash_password(password)
+    logging.info(f"Account created for user: {username}") # Log for successful account creation
+    print("Account created successfully")
+
+def encrypt_data(data: str) -> str: # Encrypt data if security is enabled
+    if SECURITY_ENABLED:
+        return cipher_suite.encrypt(data.encode()).decode()
+    return data
+
+def decrypt_data(data: str) -> str: # Decrypt data if security is enabled
+    if SECURITY_ENABLED:
+        return cipher_suite.decrypt(data.encode()).decode()
+    return data
+
+def toggle_security(): # Enable or disable security
+    global SECURITY_ENABLED
+    SECURITY_ENABLED = not SECURITY_ENABLED
+    state = "enabled" if SECURITY_ENABLED else "disabled"
+    logging.info(f"Security has been {state}.")
+    print(f"Security is now {state}.")
+    
+# Test Cases
+def brute_force_test():
+    print("\n--- Brute-Force Attack Test ---")
+    target_user = "admin"
+    password_list = ["qwerty", "password", "admin123", "123123", "admin"]
+    
+    # Ensure the target user exists
+    create_account(target_user, "admin")
+    
+    for password in password_list:
+        print(f"Trying password: {password}")
+        if authenticate(target_user, password):
+            print(f"Password {password} succeeded!")
+            return
+    print("Brute-force attack failed to find the correct password.")
+
+def dos_attack_test():
+    print("\n--- Denial of Service (DoS) Attack Test ---")
+    
+    def attempt_login():
+        while True:
+            authenticate("test_user", "wrong_password")
+    
+    threads = []
+    for _ in range(30):  # Simulate 30 threads flooding the authentication system
+        thread = threading.Thread(target=attempt_login)
+        threads.append(thread)
+        thread.start()
+    
+    time.sleep(2)  # Let the threads run for 2 seconds
+    print("DoS attack simulation completed.")
+
+def api_injection_test():
+    print("\n--- API Injection Attack Test ---")
+    malicious_input = "' OR '1'='1"
+    create_account("injection_test", "safe_password")
+    result = authenticate("injection_test", malicious_input)
+    if result:
+        print("API injection attack succeeded!")
+    else:
+        print("API injection attack failed.")
+
+def run_tests():
+    print("\n--- Running All Tests ---")
+    brute_force_test()
+    api_injection_test()
+    dos_attack_test()
+
+    print("--- Tests Completed ---")
+
+# CLI Menu
+def main_menu():
+    while True:
+        print("\n--- Secure System CLI ---")
+        print("1. Create Account")
+        print("2. Login")
+        print("3. Toggle Security")
+        print("4. Run Security Tests")
+        print("5. Exit")
+        
+        choice = input("Choose an option: ")
+        if choice == "1":
+            username = input("Enter username: ")
+            password = input("Enter password: ")
+            create_account(username, password)
+        elif choice == "2":
+            username = input("Enter username: ")
+            password = input("Enter password: ")
+            if authenticate(username, password):
+                print(f"Login successful, {username}")
+            else:
+                print("Invalid information")
+        elif choice == "3":
+            toggle_security()
+        elif choice == "4":
+            run_tests()
+        elif choice == "5":
+            print("Exiting the system.")
+            break
+        else:
+            print("Invalid choice. Try again.")
+
+if __name__ == "__main__":
+    main_menu()
+
         </pre>
         <h2>Testing Features</h2>
         <p>Testing covered brute force, denial-of-service (DoS), and API injection attacks.</p>
