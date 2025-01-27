@@ -33,10 +33,8 @@
         <h1>Coding</h1>
     </header>
     <div class="container">
+        <section id="Self Assessment">
         <h2>Base Application</h2>
-        <pre>
-
-        </pre>
         <h2>Features</h2>
         <p>The application supports secure account creation, authentication, and encryption features.</p>
     </div>
