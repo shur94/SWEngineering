@@ -41,8 +41,22 @@ import time
         </pre>
         <h2>Testing Features</h2>
         <p>Testing covered brute force, denial-of-service (DoS), and API injection attacks.</p>
-        <p></p>
+        <h2>Purpose of the application</h2>
+        <p>The developed application allows users to create and login to the system, which keeps such credentials as encrypted data, and with a log of events to monitor any potential attacks or any other activities. </p>
+       
+        <h3>1. brute_force_test</h3>
+        <p>This test will try five brute force attacks for an account ‘admin’ with 5 different passwords. In the application testing, ‘admin’ was created with the password of ‘qwerty’, hence, the test should be conducted successfully.</p>
 
+        <h3>2. dos_attack_test</h3>
+        <p>This test will attack the system with several attempts of logins so that the system cannot work as usual. Therefore, security.log will identify the number of failures in authentication processes.</p>
+
+        <h3>3. api_injection_test</h3>
+        <p>This test will try injecting an account to the system to bypass the password authentication. If the test succeeds, it will be recorded in the log.</p>
+
+        <h2>Result</h2>
+        <p>Brute force attack test succeeded with an admin account that has qwerty as password, API injection attack test failed, and DOS attack test also succeeded with almost 40,000 failures log. </p>
+    
+    
     </div>
 </body>
 </html>
