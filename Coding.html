@@ -20,6 +20,107 @@
         .container {
             padding: 2em;
         }
+                pre {
+            background: #eee;
+            padding: 1em;
+            overflow: auto;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>System Testing</h1>
+    </header>
+    <div class="container">
+        <h2>Attack Test Script</h2>
+        <pre>
+import hashlib # Importing the hashlib module
+from cryptography.fernet import Fernet # Importing the Fernet module
+import logging # Importing the logging module
+
+# Logging setup to montitor events. 1. File name, 2. Log level at or above the info, 3. Log format with timestamp and message
+logging.basicConfig(filename="security.log", level=logging.INFO, format="%(asctime)s - %(message)s")
+
+# Security features
+SECURITY_ENABLED = True # Variable for indication of encryption status
+ENCRYPTION_KEY = Fernet.generate_key() # Generates a unique symmetric encryption key using Fernet
+cipher_suite = Fernet(ENCRYPTION_KEY) # initialized for encrypting and decrypting data
+
+# User data repository
+users = {}  # Stores users as {username: hashed_password}
+
+def hash_password(password: str) -> str: # Function for hashing password using SHA-256
+    return hashlib.sha256(password.encode()).hexdigest()
+
+def authenticate(username: str, password: str) -> bool: # Function for authentication
+    hashed_password = users.get(username)
+    if hashed_password and hashed_password == hash_password(password):
+        logging.info(f"Authentication successful for user: {username}") # Log for successful authentication
+        return True
+    else:
+        logging.warning(f"Authentication failed for user: {username}") # Log for failed authentication
+        return False
+
+def create_account(username: str, password: str): # Create a secure account
+    if username in users:
+        logging.warning(f"Attempt to create duplicate account: {username}") # Log for duplicate account creation
+        print("User already exists")
+        return
+    users[username] = hash_password(password)
+    logging.info(f"Account created for user: {username}") # Log for successful account creation
+    print("Account created successfully")
+
+def encrypt_data(data: str) -> str: # Encrypt data if security is enabled
+    if SECURITY_ENABLED:
+        return cipher_suite.encrypt(data.encode()).decode()
+    return data
+
+def decrypt_data(data: str) -> str: # Decrypt data if security is enabled
+    if SECURITY_ENABLED:
+        return cipher_suite.decrypt(data.encode()).decode()
+    return data
+
+def toggle_security(): # Enable or disable security
+    global SECURITY_ENABLED
+    SECURITY_ENABLED = not SECURITY_ENABLED
+    state = "enabled" if SECURITY_ENABLED else "disabled"
+    logging.info(f"Security has been {state}.")
+    print(f"Security is now {state}.")
+
+# CLI Menu
+def main_menu(): # Main menu for secure CLI system
+    while True:
+        print("\n--- Secure System CLI ---")
+        print("1. Create Account")
+        print("2. Login")
+        print("3. Toggle Security")
+        print("4. Exit")
+        
+        choice = input("Choose an option: ")
+        if choice == "1":
+            username = input("Enter username: ")
+            password = input("Enter password: ")
+            create_account(username, password)
+        elif choice == "2":
+            username = input("Enter username: ")
+            password = input("Enter password: ")
+            if authenticate(username, password):
+                print(f"Login successful, {username}")
+            else:
+                print("Invalid information")
+        elif choice == "3":
+            toggle_security()
+        elif choice == "4":
+            print(f"Logout successful, {username}")
+            break
+        else:
+            print("Invalid choice. Try again.")
+
+if __name__ == "__main__":
+    main_menu()
+
+        </pre>
     </style>
 </head>
 <body>
@@ -38,13 +139,12 @@
             <p>Simultaneously, the application will indication encryption status with SECURITY_ENABLED.</p>
             <p>Lastly, ENCRYPTION_KEY and cipher_suite will be available in the application.</p>
             
-            <h3>Testing</h3>
-            <p><strong>1. Overall</strong></p>
-            <p>Although the design lacked essential details, the outcome did work as I intended.</p>
-            <p>However, since the fundamental knowledge and the base lack expertise, the testing has also been conducted with a very limited scope.</p>
-            <p><strong>2. Understanding</strong></p>
-            <p>Considering my understanding, I have not successfully conducted testings for requested scenarios.</p>
-            <p>To conclude, considering the extent how I simplified the design, the final piece did work at some point, however, it was not enough to be an successful implementation of an application.</p>
+            <p><strong>Basic Function</strong></p>
+            <p>"hash_password" will allow the application to use SHA-256 encryption to hash passwords that are stored by users.</p>
+            <p>"Authenticate" will authenticate input data, which will be logged simultaneously, and allow administer to monitor failed authentications.</p>
+            <p>"create_account" will string variables, username and password registered by the user.</p>
+            <p>"encrypt_data, decrypt_data" will enable encryption and decryption of stored data while the security option is enabled.</p>
+            <p>"toggle_security" will ensure that the security measure will not be limited to the local file.</p>
     </div>
 </body>
 </html>
