@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>System Implementation</title>
+    <title>Coding</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -20,12 +20,6 @@
         .container {
             padding: 2em;
         }
-        pre {
-            background: #eee;
-            padding: 1em;
-            overflow: auto;
-            border-radius: 5px;
-        }
     </style>
 </head>
 <body>
@@ -33,10 +27,24 @@
         <h1>Coding</h1>
     </header>
     <div class="container">
-        <section id="Self Assessment">
-        <h2>Base Application</h2>
-        <h2>Features</h2>
-        <p>The application supports secure account creation, authentication, and encryption features.</p>
+        <section id="Coding">
+            <h2>Coding</h2>
+            <p><strong>Basic imports</strong></p>
+            <p>The code imports hashlib, Fernet from cryptography.fernet and logging.</p>
+            <p>Purposes of such imports are to hash paasswords with SHA-256, to use symmetric encryption from Fernet, and to monitor the logs.</p>
+            
+            <p><strong>Implementation</strong></p>
+            <p>By importing a logging library, the logging module is enabled to monitor any activities within the application with "logging".</p>
+            <p>Simultaneously, the application will indication encryption status with SECURITY_ENABLED.</p>
+            <p>Lastly, ENCRYPTION_KEY and cipher_suite will be available in the application.</p>
+            
+            <h3>Testing</h3>
+            <p><strong>1. Overall</strong></p>
+            <p>Although the design lacked essential details, the outcome did work as I intended.</p>
+            <p>However, since the fundamental knowledge and the base lack expertise, the testing has also been conducted with a very limited scope.</p>
+            <p><strong>2. Understanding</strong></p>
+            <p>Considering my understanding, I have not successfully conducted testings for requested scenarios.</p>
+            <p>To conclude, considering the extent how I simplified the design, the final piece did work at some point, however, it was not enough to be an successful implementation of an application.</p>
     </div>
 </body>
 </html>
